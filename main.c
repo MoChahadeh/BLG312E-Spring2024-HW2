@@ -14,6 +14,7 @@ typedef struct block_header {
 // Global variables
 BlockHeader *free_list = NULL;
 void *heap_start = NULL;
+size_t heap_size = 0;
 
 // Function prototypes
 int InitMyMalloc(int HeapSize);
@@ -32,14 +33,14 @@ int InitMyMalloc(int HeapSize) {
         return -1;
     }
 
-    size_t rounded_heap_size = roundUpToPageSize(HeapSize + sizeof(BlockHeader));
-    heap_start = mmap(NULL, rounded_heap_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    heap_size = roundUpToPageSize(HeapSize + sizeof(BlockHeader));
+    heap_start = mmap(NULL, heap_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     if (heap_start == MAP_FAILED) {
         return -1;
     }
 
     free_list = (BlockHeader *)heap_start;
-    free_list->size = rounded_heap_size - sizeof(BlockHeader);
+    free_list->size = heap_size - sizeof(BlockHeader);
     free_list->next = NULL;
 
     return 0;
@@ -211,6 +212,10 @@ int main() {
     DumpFreeList();
 
     printf("Freeing the heap at: %p\n", heap_start);
-    free(heap_start);
+    
+    if (munmap(heap_start, heap_size) == -1) {
+        printf("Memory deallocation failed!\n");
+        return 1;
+    }
     return 0;
 }
