@@ -116,32 +116,11 @@ int MyFree(void *ptr) {
 
     BlockHeader *block_to_free = (BlockHeader *)((char *)ptr - sizeof(BlockHeader));
 
-    printf("Here 1\n");
-
-    // Coalesce free blocks
-    BlockHeader *curr_block = block_list;
-    BlockHeader *prev_block = NULL;
-    while (curr_block != NULL && curr_block < block_to_free) {
-        prev_block = curr_block;
-        curr_block = curr_block->next;
-    }
-
-    printf("Here 2\n");
-
-    if (prev_block == NULL) {
-        block_to_free->next = block_list;
-        block_list = block_to_free;
-        printf("Here 3\n");
-    } else {
-        block_to_free->next = prev_block->next;
-        prev_block->next = block_to_free;
-        printf("Here 4\n");
-    }
-
-    printf("Here 5\n");
+    // Mark the block as free
+    block_to_free->is_free = true;
 
     // Merge adjacent free blocks
-    curr_block = block_list;
+    BlockHeader *curr_block = block_list;
     while (curr_block != NULL) {
         printf("Here 6\n");
         if ((curr_block->is_free && curr_block->next != NULL && curr_block->next->is_free) && (char *)curr_block + curr_block->size + sizeof(BlockHeader) == (char *)curr_block->next) {
