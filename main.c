@@ -1,6 +1,6 @@
 #include "mymem.c"
 
-char* getstrategy(i) {
+char* getstrategy(int i) {
 
     if (i == 0) {
         return "Best Fit\n";

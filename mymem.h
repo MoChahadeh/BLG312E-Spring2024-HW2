@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <stdbool.h>
+#include <sys/wait.h>
 
 #define PAGE_SIZE getpagesize()
 
