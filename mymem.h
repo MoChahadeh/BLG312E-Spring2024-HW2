@@ -15,6 +15,7 @@ typedef struct block_header {
 
 // Global variables
 BlockHeader *block_list = NULL;
+BlockHeader *last_choice = NULL;
 void *heap_start = NULL;
 size_t heap_size = 0;
 
