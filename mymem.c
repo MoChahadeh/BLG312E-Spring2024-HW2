@@ -114,10 +114,10 @@ int MyFree(void *ptr) {
 
         if ((curr_block->is_free && curr_block->next != NULL && curr_block->next->is_free) && (char *)curr_block + curr_block->size + sizeof(BlockHeader) == (char *)curr_block->next) {
             curr_block->size += curr_block->next->size + sizeof(BlockHeader);
-            curr_block->next = curr_block->next->next;
             if(last_choice == curr_block->next) {
                 last_choice = curr_block;
             }
+            curr_block->next = curr_block->next->next;
         } else {
             curr_block = curr_block->next;
         }
